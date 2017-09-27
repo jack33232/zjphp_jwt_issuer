@@ -1,0 +1,22 @@
+{
+    "name": "jack33232/zjphp_jwt_issuer",
+    "description": "JWT Issuer for ZJPHP",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "jack33232",
+            "email": "jack33232@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "jack33232/zjphp": "dev-master",
+        "jack33232/zjphp_apiproxy": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "ZJPHP\\JWT\\": ""
+        }
+    }
+}
