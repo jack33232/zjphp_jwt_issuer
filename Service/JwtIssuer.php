@@ -149,6 +149,19 @@ class JwtIssuer extends Component
         return $jwt;
     }
 
+    public function simpleVerifyJwt($jwt_str, $audience)
+    {
+        try {
+            $jwt = (new Parser())->parse((string) $jwt_str);
+        } catch (\Exception $e) {
+            throw HttpException::createFromCode(401);
+        }
+        $this->verifyJwtSignature($jwt);
+        $this->verifyJwtClaims($jwt, $audience);
+
+        return $jwt;
+    }
+
     public function subVerifyJwt($jwt_str)
     {
         try {

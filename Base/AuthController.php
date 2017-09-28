@@ -33,24 +33,27 @@ class AuthController extends Controller
 
         $jwt = JwtIssuer::generateJwt($app_id, $audience->quota, $audience_id, $jwt_system->base_url, $payload);
 
-       // Notify the Audience & get the response
-        $notify_request = ApiProxy::getRequest(
-            $audience_id,
-            'notify_jwt',
-            [
-                'POST' => [
-                    'jti' => $jwt->getHeader('jti'),
-                    'encrypt' => $jwt->getClaim('encrypt', 'N'),
-                    'sign' => $jwt->getClaim('sign', 'N'),
-                    'expire_at' => $jwt->getClaim('exp', strtotime('2047-06-30 23:59:59'))
-                ]
-            ]
-        );
-
-        $notify_result = $notify_request->send();
         $session_key = null;
-        if (isset($notify_result['session_key'])) {
-            $session_key = $this->processSignSecret($notify_result['session_key'], $app_secret);
+       // Notify the Audience & get the response
+        if (ApiProxy::hasService($audience_id, 'notify_jwt')) {
+            $notify_request = ApiProxy::getRequest(
+                $audience_id,
+                'notify_jwt',
+                [
+                    'POST' => [
+                        'jti' => $jwt->getHeader('jti'),
+                        'encrypt' => $jwt->getClaim('encrypt', 'N'),
+                        'sign' => $jwt->getClaim('sign', 'N'),
+                        'expire_at' => $jwt->getClaim('exp', strtotime('2047-06-30 23:59:59'))
+                    ]
+                ]
+            );
+
+            $notify_result = $notify_request->send();
+            
+            if (isset($notify_result['session_key'])) {
+                $session_key = $this->processSignSecret($notify_result['session_key'], $app_secret);
+            }
         }
 
         $response_data = [
