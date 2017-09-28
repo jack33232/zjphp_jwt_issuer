@@ -254,7 +254,7 @@ class Authentication extends Component
 
     private function _getJwtQuotaKey($app_id, $audience)
     {
-        return ZJPHP::$app->getAppName() . ':JwtPool-' . date('Ymd') . ':appid-' . $app_id . ':audience' . $audience;
+        return ZJPHP::$app->getAppName() . ':JwtPool-' . date('Ymd') . ':appid-' . $app_id . ':audience-' . $audience;
     }
 
     public function setJwtTtl($ttl)
