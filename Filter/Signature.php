@@ -5,7 +5,7 @@ use ZJPHP\Base\ZJPHP;
 use ZJPHP\Base\Component;
 use ZJPHP\Base\FilterInterface;
 use Klein\Exceptions\HttpException;
-use ZJPHP\JWT\Facade\Authentication;
+use ZJPHP\JWT\Facade\JwtIssuer;
 use ZJPHP\JWT\Base\JwtSystemVault;
 
 class Signature extends Component implements FilterInterface
@@ -43,7 +43,7 @@ class Signature extends Component implements FilterInterface
             throw HttpException::createFromCode(401);
         }
         // Verify the user signature
-        $signature = Authentication::sign($request_data, $jwt_system->app_secret);
+        $signature = JwtIssuer::sign($request_data, $jwt_system->app_secret);
 
         if ($request_data['signature'] !== $signature) {
             throw HttpException::createFromCode(401);
@@ -74,7 +74,7 @@ class Signature extends Component implements FilterInterface
         }
 
         // Verify the user signature
-        $signature = Authentication::sign($request_data, $app->session_key);
+        $signature = JwtIssuer::sign($request_data, $app->session_key);
         if ($request_data['signature'] !== $signature) {
             throw HttpException::createFromCode(401);
         }

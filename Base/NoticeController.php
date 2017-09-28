@@ -5,15 +5,11 @@ use ZJPHP\Base\ZJPHP;
 use ZJPHP\Base\Controller;
 use Klein\Exceptions\HttpException;
 use ZJPHP\Facade\ZJRedis;
-use ZJPHP\JWT\Facade\Authentication;
+use ZJPHP\JWT\Facade\JwtIssuer;
 use ZJPHP\Facade\Security;
 
 class NoticeController extends Controller
 {
-    /**
-     * Call authentication service to assign a JWT
-     * Request need to be signed & Replay defender need to be activated.
-     **/
     public function jwt($request, $response, $service, $app, $router)
     {
         $jti = $request->paramsPost()->get('jti', null);
@@ -22,7 +18,7 @@ class NoticeController extends Controller
         if (empty($jti) || empty($expire_at)) {
             throw HttpException::createFromCode(400);
         }
-        Authentication::acceptJwt($jti, $expire_at);
+        JwtIssuer::acceptJwt($jti, $expire_at);
 
         $flag_for_sign = $request->paramsPost()->get('sign', 'N');
         $flag_for_encrypt = $request->paramsPost()->get('encrypt', 'N');
@@ -31,7 +27,7 @@ class NoticeController extends Controller
             'success' => true
         ];
         if ($flag_for_sign === 'Y' || $flag_for_encrypt === 'Y') {
-            $session_key = Authentication::genSessionKey($jti, $expire_at);
+            $session_key = JwtIssuer::genSessionKey($jti, $expire_at);
             $result['session_key'] = Security::asymmetricEncrypt($session_key);
         }
 

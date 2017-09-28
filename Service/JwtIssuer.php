@@ -17,7 +17,7 @@ use Lcobucci\JWT\ValidationData;
 use Lcobucci\JWT\Signer\Keychain;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 
-class Authentication extends Component
+class JwtIssuer extends Component
 {
     private $_jwtTtl = 7200; //Seconds, 2 hours
     private $_jwtRsa = [];

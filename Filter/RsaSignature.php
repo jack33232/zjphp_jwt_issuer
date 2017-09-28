@@ -6,7 +6,7 @@ use ZJPHP\Base\Component;
 use ZJPHP\Base\FilterInterface;
 use ZJPHP\Base\Kit\ArrayHelper;
 use Klein\Exceptions\HttpException;
-use ZJPHP\JWT\Facade\Authentication;
+use ZJPHP\JWT\Facade\JwtIssuer;
 
 class RsaSignature extends Component implements FilterInterface
 {
@@ -28,7 +28,7 @@ class RsaSignature extends Component implements FilterInterface
 
         $url = rtrim(ROOT_URL . $request->pathname(), '/');
 
-        if (!Authentication::rsaVerify($data_to_sign, $signature, $url, $this->algo)) {
+        if (!JwtIssuer::rsaVerify($data_to_sign, $signature, $url, $this->algo)) {
             throw HttpException::createFromCode(401);
         }
     }

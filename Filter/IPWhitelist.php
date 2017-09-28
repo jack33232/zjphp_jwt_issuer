@@ -5,7 +5,6 @@ use ZJPHP\Base\ZJPHP;
 use ZJPHP\Base\Component;
 use ZJPHP\Base\FilterInterface;
 use Klein\Exceptions\HttpException;
-use ZJPHP\JWT\Facade\Authentication;
 
 class IPWhitelist extends Component implements FilterInterface
 {

@@ -5,7 +5,7 @@ use ZJPHP\Base\ZJPHP;
 use ZJPHP\Base\Component;
 use ZJPHP\Base\FilterInterface;
 use Klein\Exceptions\HttpException;
-use ZJPHP\JWT\Facade\Authentication;
+use ZJPHP\JWT\Facade\JwtIssuer;
 use ZJPHP\Base\Kit\StringHelper;
 
 class JWT extends Component implements FilterInterface
@@ -14,9 +14,9 @@ class JWT extends Component implements FilterInterface
 
     public function filter($request, $response, $service, $app, $router)
     {
-        $jwt_str = trim(substr($request->headers()->get('Authorization'), strlen(Authentication::getJwtSchema())));
+        $jwt_str = trim(substr($request->headers()->get('Authorization'), strlen(JwtIssuer::getJwtSchema())));
 
-        $app->jwt = $jwt = Authentication::verifyJwt($jwt_str, $this->audience);
+        $app->jwt = $jwt = JwtIssuer::verifyJwt($jwt_str, $this->audience);
 
         $jti = $jwt->getHeader('jti');
         $sign = $jwt->getClaim('sign', 'N');
@@ -24,7 +24,7 @@ class JWT extends Component implements FilterInterface
         $expire_at = $jwt->getClaim('exp', strtotime('2047-06-30 23:59:59'));
 
         if ($sign === 'Y' || $encrypt === 'Y') {
-            $session_key = Authentication::getSessionKey($jti, $expire_at);
+            $session_key = JwtIssuer::getSessionKey($jti, $expire_at);
             if (empty($session_key)) {
                 throw HttpException::createFromCode(4011);
             }

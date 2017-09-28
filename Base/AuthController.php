@@ -6,16 +6,12 @@ use ZJPHP\Base\Controller;
 use Klein\Exceptions\HttpException;
 use ZJPHP\Facade\Router;
 use ZJPHP\Facade\Validation;
-use ZJPHP\JWT\Facade\Authentication;
+use ZJPHP\JWT\Facade\JwtIssuer;
 use ZJPHP\ApiProxy\Facade\ApiProxy;
 use ZJPHP\Facade\Security;
 
 class AuthController extends Controller
 {
-    /**
-     * Call authentication service to assign a JWT
-     * Request need to be signed & Replay defender need to be activated.
-     **/
     public function jwt($request, $response, $service, $app, $router)
     {
         $app_id = $app->app_id;
@@ -35,7 +31,7 @@ class AuthController extends Controller
             'sign' => $audience->sign
         ] + (array) $audience->extra_payload;
 
-        $jwt = Authentication::generateJwt($app_id, $audience->quota, $audience_id, $jwt_system->base_url, $payload);
+        $jwt = JwtIssuer::generateJwt($app_id, $audience->quota, $audience_id, $jwt_system->base_url, $payload);
 
        // Notify the Audience & get the response
         $notify_request = ApiProxy::getRequest(
