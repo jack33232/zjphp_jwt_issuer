@@ -168,7 +168,7 @@ class JwtIssuer extends Component
 
         $redis_client = ZJRedis::connect();
         $existed = $redis_client->zScore($jwt_pool_key, $jti);
-        if (is_null($existed)) {
+        if (is_null($existed) || $existed === false) {
             throw HttpException::createFromCode(401);
         }
     }
