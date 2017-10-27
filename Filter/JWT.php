@@ -26,7 +26,7 @@ class JWT extends Component implements FilterInterface
         if ($sign === 'Y' || $encrypt === 'Y') {
             $session_key = JwtIssuer::getSessionKey($jti, $expire_at);
             if (empty($session_key)) {
-                throw HttpException::createFromCode(4011);
+                throw HttpException::createFromCode(401);
             }
             $app->session_key = $session_key;
             if ($encrypt === 'Y') {
